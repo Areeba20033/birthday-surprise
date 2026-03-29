@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday Ayesha 🎉</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    color: white;
+    overflow: hidden;
+}
+
+.page {
+    display: none;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.active {
+    display: flex;
+}
+
+h1 {
+    font-size: 3rem;
+}
+
+button {
+    padding: 15px 25px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 10px;
+    background: white;
+    color: #ff4d6d;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+button:hover {
+    background: #ffe0e6;
+}
+
+#gift {
+    font-size: 100px;
+    cursor: pointer;
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {transform: translateY(0);}
+    50% {transform: translateY(-15px);}
+}
+
+#message {
+    font-size: 1.4rem;
+    max-width: 600px;
+    min-height: 120px;
+    white-space: pre-line;
+}
+
+/* Confetti */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+/* Balloons */
+.balloon {
+    position: absolute;
+    bottom: -100px;
+    width: 40px;
+    height: 50px;
+    border-radius: 50%;
+    animation: floatUp 8s linear infinite;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-120vh);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- MUSIC -->
+<audio id="music" autoplay loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-birthday.mp3" type="audio/mp3">
+</audio>
+
+<canvas id="confetti"></canvas>
+
+<!-- PAGE 1 -->
+<div class="page active">
+    <h1>🎉 Happy Birthday Ayesha!!! 🎂</h1>
+    <button onclick="showGift()">Open Your Gift 🎁</button>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="giftPage">
+    <div id="gift" onclick="openGift()">🎁</div>
+    <p>Tap the gift 👀</p>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page" id="finalPage">
+    <h1>💖 Ayesha 💖</h1>
+    <div id="message"></div>
+</div>
+
+<script>
+
+/* PAGE NAVIGATION */
+function showGift() {
+    document.querySelector(".active").classList.remove("active");
+    document.getElementById("giftPage").classList.add("active");
+}
+
+function openGift() {
+    document.getElementById("giftPage").classList.remove("active");
+    document.getElementById("finalPage").classList.add("active");
+    createBalloons();
+    startTyping();
+}
+
+/* TYPING MESSAGE */
+const text = "Happy Birthday, Ayesha 💕\n\nYou are not just my cousin — you are my best friend, my sister, and one of the most special people in my life ✨\n\nYou make everything brighter just by being in it, and I truly don’t know what I would do without you 💖\n\nI am so lucky to have you, and I love you more than words can ever fully express 💫\n\nI hope this year brings you endless happiness, success, laughter, and everything your heart desires 🎂🎉\n\nAnd no matter what happens, I will always be right here for you 💕";
+
+let i = 0;
+
+function startTyping() {
+    let speed = 40;
+    function type() {
+        if (i < text.length) {
+            document.getElementById("message").innerHTML += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+        }
+    }
+    type();
+}
+
+/* BALLOONS */
+function createBalloons() {
+    const colors = ["#ff4d6d", "#ff85a1", "#ffd6e0", "#ffffff"];
+
+    for (let i = 0; i < 25; i++) {
+        let balloon = document.createElement("div");
+        balloon.classList.add("balloon");
+
+        balloon.style.left = Math.random() * 100 + "vw";
+        balloon.style.background = colors[Math.floor(Math.random() * colors.length)];
+        balloon.style.animationDuration = (5 + Math.random() * 5) + "s";
+
+        document.body.appendChild(balloon);
+    }
+}
+
+/* CONFETTI */
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let confetti = [];
+
+for (let i = 0; i < 150; i++) {
+    confetti.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 6 + 2,
+        d: Math.random() * 50
+    });
+}
+
+function drawConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "white";
+    ctx.beginPath();
+
+    for (let i = 0; i < confetti.length; i++) {
+        let c = confetti[i];
+        ctx.moveTo(c.x, c.y);
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+    }
+
+    ctx.fill();
+    updateConfetti();
+}
+
+function updateConfetti() {
+    for (let i = 0; i < confetti.length; i++) {
+        let c = confetti[i];
+        c.y += Math.cos(c.d) + 1 + c.r / 2;
+
+        if (c.y > canvas.height) {
+            confetti[i] = {
+                x: Math.random() * canvas.width,
+                y: 0,
+                r: c.r,
+                d: c.d
+            };
+        }
+    }
+}
+
+setInterval(drawConfetti, 20);
+
+</script>
+
+</body>
+</html>
